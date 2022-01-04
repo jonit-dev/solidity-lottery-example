@@ -1,5 +1,4 @@
 import express from "express";
-
 import { serverRouter } from "./resources/server/server.routes";
 
 const app = express();

@@ -1,23 +1,13 @@
 import fs from "fs";
+import path from "path";
 
+const __dirname = path.resolve();
 class FileSystemHelper {
   public readAllFromDirectory(directoryPath: string) {
-    fs.readdir(directoryPath, function (err, files) {
-      //handling error
-      if (err) {
-        return console.log("Unable to scan directory: " + err);
-      }
-      //listing all files using forEach
+    console.log(__dirname);
+    const result = fs.readdirSync(__dirname + "/" + directoryPath, "utf8");
 
-      const output: string[] = [];
-
-      files.forEach(function (file) {
-        // Do whatever you want to do with the file
-        output.push(file);
-      });
-
-      return output;
-    });
+    return result;
   }
 }
 
