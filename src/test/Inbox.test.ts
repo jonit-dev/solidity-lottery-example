@@ -1,27 +1,17 @@
 import assert from "assert";
-import ganache from "ganache-cli";
-import Web3 from "web3";
+import { Contract } from "web3-eth-contract";
+import { contractHelper } from "../libs/ContractHelper";
 
-const web3 = new Web3(ganache.provider());
+let inbox: Contract;
 
-class Car {
-  park() {
-    return "stopped";
-  }
+beforeEach(async () => {
+  // deploy the contract
+  inbox = await contractHelper.compileAndDeploy("Inbox", ["Hi there!"]);
+});
 
-  drive() {
-    return "vroom";
-  }
-}
-
-describe("Class", () => {
-  const car = new Car();
-
-  it("should stop when park() is called", () => {
-    assert.strictEqual(car.park(), "stopped");
-  });
-
-  it("should drive when drive() is called", () => {
-    assert.strictEqual(car.drive(), "vroom");
+describe("Inbox.sol", () => {
+  it("deploys a contract", () => {
+    // having an address confirms that the contract was deployed successfully
+    assert.ok(inbox.options.address);
   });
 });
