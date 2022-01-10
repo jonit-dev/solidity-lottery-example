@@ -22,8 +22,9 @@ class ContractHelper {
     );
   }
 
-  private async getTestingAccounts(): Promise<string[]> {
-    return await web3.eth.getAccounts();
+  public async getTestingAccount(): Promise<string> {
+    const accounts = await web3.eth.getAccounts();
+    return accounts[0];
   }
 
   private compile(contractName: string): ISolcSmartContract {
@@ -47,11 +48,9 @@ class ContractHelper {
     args: any[] = [],
     gas = 1000000
   ): Promise<PromiEvent<Contract>> {
-    const accounts = await this.getTestingAccounts();
-
     return new web3.eth.Contract(JSON.parse(itrf))
       .deploy({ data: bytecode, arguments: args })
-      .send({ from: accounts[0], gas });
+      .send({ from: await this.getTestingAccount(), gas });
   }
 }
 
