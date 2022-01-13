@@ -1,12 +1,12 @@
 import assert from "assert";
 import { Contract } from "web3-eth-contract";
-import { contractHelper } from "../libs/ContractHelper";
+import { localNetworkHelper } from "../libs/LocalNetworkHelper";
 
 let inbox: Contract;
 
 beforeEach(async () => {
   // deploy the contract
-  inbox = await contractHelper.compileAndDeploy("Inbox", ["Hi there!"]);
+  inbox = await localNetworkHelper.compileAndDeploy("Inbox", ["Hi there!"]);
 });
 
 describe("Inbox.sol", () => {
@@ -24,7 +24,7 @@ describe("Inbox.sol", () => {
   it("can change the message", async () => {
     await inbox.methods
       .setMessage("updated message")
-      .send({ from: await contractHelper.getTestingAccount() });
+      .send({ from: await localNetworkHelper.getTestingAccount() });
 
     const message = await inbox.methods.message().call();
 

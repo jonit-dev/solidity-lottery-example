@@ -9,7 +9,7 @@
     "test": "mocha -r ts-node/register ./src/test/**/*.test.ts"
   },
   "devDependencies": {
-    "@truffle/hdwallet-provider": "^1.5.1",
+    "@truffle/hdwallet-provider": "^2.0.0",
     "@types/express": "^4.17.13",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.4.2",
