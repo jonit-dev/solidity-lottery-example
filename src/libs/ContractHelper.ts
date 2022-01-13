@@ -9,6 +9,12 @@ import { ISolcSmartContract } from "../@types/solidity/solcTypes";
 
 const web3 = new Web3(ganache.provider());
 class ContractHelper {
+  public testingAccounts: Promise<string[]>;
+
+  constructor() {
+    this.testingAccounts = web3.eth.getAccounts();
+  }
+
   public async compileAndDeploy(
     contractName: string,
     args: any[] = []
@@ -23,7 +29,7 @@ class ContractHelper {
   }
 
   public async getTestingAccount(): Promise<string> {
-    const accounts = await web3.eth.getAccounts();
+    const accounts = await this.testingAccounts;
     return accounts[0];
   }
 
