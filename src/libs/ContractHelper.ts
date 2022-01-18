@@ -19,3 +19,5 @@ export class ContractHelper {
     return compiledContract as ISolcSmartContract;
   }
 }
+
+export const contractHelper = new ContractHelper();
