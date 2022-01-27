@@ -1,22 +1,42 @@
 import fs from "fs";
 import path from "path";
 import solc from "solc";
-import { ISolcSmartContract } from "../@types/solidity/solcTypes";
+import { IContractData } from "../@types/solidity/smartContractTypes";
 
 export class ContractHelper {
-  public compile(contractName: string): ISolcSmartContract {
+  public compile(contractName: string): IContractData {
+    const contractFullName = `${contractName}.sol`;
+
     const contractPath = path.resolve(
       __dirname,
       "../contracts",
-      `${contractName}.sol`
+      contractFullName
     );
+
+    // read contract source code and compile it through solc compiler.
+
     const source = fs.readFileSync(contractPath, "utf8");
 
-    const compiledContract = solc.compile(source, 1).contracts[
-      `:${contractName}`
-    ];
+    const input = {
+      language: "Solidity",
+      sources: {
+        [contractFullName]: {
+          content: source,
+        },
+      },
+      settings: {
+        outputSelection: {
+          "*": {
+            "*": ["*"],
+          },
+        },
+      },
+    };
 
-    return compiledContract as ISolcSmartContract;
+    const compiledContract = JSON.parse(solc.compile(JSON.stringify(input)))
+      .contracts[contractFullName][contractName];
+
+    return compiledContract;
   }
 }
 

@@ -23,7 +23,7 @@ describe("Inbox.sol", () => {
 
   it("can change the message", async () => {
     await inbox.methods
-      .setMessage("updated message")
+      .setMessage("updated message") // since we're changing data, we need to call it with .send() and it's not an instantaneous operation!
       .send({ from: await localNetworkHelper.getTestingAccount() });
 
     const message = await inbox.methods.message().call();

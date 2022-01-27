@@ -1,7 +1,7 @@
 import ganache from "ganache-cli";
 import Web3 from "web3";
-import { PromiEvent } from "web3-core";
 import { Contract } from "web3-eth-contract";
+import { Evm } from "../@types/solidity/smartContractTypes";
 import { ContractHelper } from "./ContractHelper";
 
 class LocalNetworkHelper {
@@ -17,14 +17,10 @@ class LocalNetworkHelper {
   public async compileAndDeploy(
     contractName: string,
     args: any[] = []
-  ): Promise<PromiEvent<Contract>> {
-    const compiledContract = this.contractHelper.compile(contractName);
+  ): Promise<Contract> {
+    const { abi, evm } = this.contractHelper.compile(contractName);
 
-    return this.deploy(
-      compiledContract.bytecode,
-      compiledContract.interface,
-      args
-    );
+    return this.deploy(abi, evm, args);
   }
 
   public async getTestingAccount(): Promise<string> {
@@ -33,14 +29,17 @@ class LocalNetworkHelper {
   }
 
   private async deploy(
-    bytecode: string,
-    itrf: string,
+    abi: any,
+    evm: Evm,
     args: any[] = [],
     gas = 1000000
-  ): Promise<PromiEvent<Contract>> {
-    return new this.web3.eth.Contract(JSON.parse(itrf))
-      .deploy({ data: bytecode, arguments: args })
-      .send({ from: await this.getTestingAccount(), gas });
+  ): Promise<Contract> {
+    return new this.web3.eth.Contract(abi)
+      .deploy({ data: evm.bytecode.object, arguments: args })
+      .send({
+        from: await this.getTestingAccount(),
+        gas,
+      }) as unknown as Contract;
   }
 }
 

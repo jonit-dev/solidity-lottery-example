@@ -24,15 +24,14 @@ export class TestNetworkHelper {
   }
 
   public async compileAndDeployTestNetwork(contractName: string, args: any[]) {
-    const { interface: interfaceName, bytecode } =
-      contractHelper.compile(contractName);
+    const { abi, evm } = contractHelper.compile(contractName);
 
     const accounts = await this.getAccounts();
     console.log("Deploying to test network from account: ", accounts[0]);
 
-    const result = await new this.web3.eth.Contract(JSON.parse(interfaceName))
+    const result = await new this.web3.eth.Contract(abi)
       .deploy({
-        data: bytecode,
+        data: evm.bytecode.object,
         arguments: args,
       })
       .send({ gas: 1000000, from: accounts[0] });
