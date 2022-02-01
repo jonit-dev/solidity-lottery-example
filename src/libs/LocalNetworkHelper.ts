@@ -7,7 +7,7 @@ import { ContractHelper } from "./ContractHelper";
 class LocalNetworkHelper {
   public testingAccounts: Promise<string[]>;
   private contractHelper: ContractHelper;
-  private web3: Web3 = new Web3(ganache.provider());
+  public web3: Web3 = new Web3(ganache.provider());
 
   constructor() {
     this.contractHelper = new ContractHelper();

@@ -73,15 +73,47 @@ describe("Lottery.sol", () => {
     );
   });
 
-  it("a manager should be able to run pickWinner without issues", async () => {
-    const manager = testingAccount;
+  it("only a manager should be able to call pickWinner's method", async () => {
+    const contractManager = await Lottery.methods.manager().call();
 
-    await assert.doesNotReject(
-      Lottery.methods.pickWinner().send({
-        from: manager,
-        gas: 1000000,
-      })
+    await assert.doesNotReject(pickWinner(contractManager));
+  });
+
+  it("should get the total players in our lottery, when getPlayers() is called", async () => {
+    await enterLottery(testingAccounts[0]);
+    await enterLottery(testingAccounts[1]);
+    await enterLottery(testingAccounts[2]);
+
+    const players = await Lottery.methods.getPlayers().call();
+
+    // assert players is an array of strings
+    assert.ok(Array.isArray(players));
+    assert.ok(players.length === 3);
+  });
+
+  it("should send money to the winner and resets players array", async () => {
+    // lets redeploy, so we have a clean state smart contract
+    Lottery = await localNetworkHelper.compileAndDeploy("Lottery");
+
+    await enterLottery(testingAccount);
+
+    console.log("total players");
+
+    const players = await Lottery.methods.getPlayers().call();
+    console.log(players);
+
+    const initialBalance = await localNetworkHelper.web3.eth.getBalance(
+      testingAccount
     );
+
+    await pickWinner(testingAccount);
+
+    const finalBalance = await localNetworkHelper.web3.eth.getBalance(
+      testingAccount
+    );
+
+    // if our finalBalance is higher than the initialBalance, we know that we have sent money to the winner
+    assert.ok(Number(finalBalance) > Number(initialBalance));
   });
 });
 
@@ -92,6 +124,13 @@ const enterLottery = async (
   await Lottery.methods.enter().send({
     from: account,
     value: web3.utils.toWei(ticketFee, "ether"),
+    gas: 1000000,
+  });
+};
+
+const pickWinner = async (fromAccount: string): Promise<void> => {
+  await Lottery.methods.pickWinner().send({
+    from: fromAccount,
     gas: 1000000,
   });
 };
