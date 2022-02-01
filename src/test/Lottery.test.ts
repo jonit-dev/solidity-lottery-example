@@ -33,8 +33,6 @@ describe("Lottery.sol", () => {
 
     const hasPlayer = players.includes(testingAccount);
 
-    // assert hasPlayer is true
-
     assert.ok(hasPlayer);
   });
 
