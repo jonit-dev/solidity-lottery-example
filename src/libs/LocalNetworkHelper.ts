@@ -28,6 +28,10 @@ class LocalNetworkHelper {
     return accounts[0];
   }
 
+  public async getTestingAccounts(): Promise<string[]> {
+    return await this.testingAccounts;
+  }
+
   private async deploy(
     abi: any,
     evm: Evm,

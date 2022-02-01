@@ -23,7 +23,10 @@ export class TestNetworkHelper {
     return this.web3.eth.getAccounts();
   }
 
-  public async compileAndDeployTestNetwork(contractName: string, args: any[]) {
+  public async compileAndDeployTestNetwork(
+    contractName: string,
+    args: any[] = []
+  ) {
     const { abi, evm } = contractHelper.compile(contractName);
 
     const accounts = await this.getAccounts();

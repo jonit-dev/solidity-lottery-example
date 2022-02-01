@@ -17,8 +17,6 @@ const server = app.listen(port, () => {
   (async () => {
     const testNetworkHelper = new TestNetworkHelper(TestNetwork.Rinkeby);
 
-    await testNetworkHelper.compileAndDeployTestNetwork("Inbox", [
-      "Hello World!",
-    ]);
+    await testNetworkHelper.compileAndDeployTestNetwork("Lottery", []);
   })();
 });
